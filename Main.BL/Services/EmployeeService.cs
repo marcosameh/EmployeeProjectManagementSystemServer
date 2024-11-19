@@ -1,8 +1,6 @@
 ﻿using App.Shared.Models;
 using AutoMapper;
 using Log.BL.IServices;
-using Log.Domain.Entities;
-using Log.Domain.Enums;
 using Main.BL.DTOs;
 using Main.BL.IServices;
 using Main.DAL.IRepository;
@@ -46,15 +44,10 @@ namespace Main.BL.Services
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                     };
                     //log action
-                    var auditLog = new AuditLog
-                    {
-                        ActionTypeId = (int)ActionTypeEnum.Add,
-                        EmployeeId = addedEmployee.Id,
-                        Timestamp = DateTime.UtcNow,
-                        OldData = null,
-                        NewData = JsonConvert.SerializeObject(addedEmployee, settings)
-                    };
-                    await _auditAuditService.AddAuditLog(addedEmployee.Id, 1, null, auditLog.NewData);
+
+                   var newData = JsonConvert.SerializeObject(addedEmployee, settings);
+                    
+                    await _auditAuditService.LogAddition(addedEmployee.Id, null, newData);
 
 
                     scope.Complete();
@@ -140,16 +133,9 @@ namespace Main.BL.Services
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                     });
 
-                    var auditLog = new AuditLog
-                    {
-                        ActionTypeId = (int)ActionTypeEnum.Update,
-                        EmployeeId = updatedEmployee.Id,
-                        Timestamp = DateTime.UtcNow,
-                        OldData = oldData,
-                        NewData = newData
-                    };
+                   
 
-                    await _auditAuditService.AddAuditLog(updatedEmployee.Id, (int)ActionTypeEnum.Update, oldData, newData);
+                    await _auditAuditService.LogUpdate(updatedEmployee.Id, oldData, newData);
 
                     scope.Complete();
 
@@ -188,17 +174,9 @@ namespace Main.BL.Services
                         return new ApiResponse<bool>(false, new List<string> { "Failed to delete employee" }, false);
                     }
 
+                  
 
-                    var auditLog = new AuditLog
-                    {
-                        ActionTypeId = (int)ActionTypeEnum.Delete,
-                        EmployeeId = employee.Id,
-                        Timestamp = DateTime.UtcNow,
-                        OldData = oldData,
-                        NewData = null
-                    };
-
-                    await _auditAuditService.AddAuditLog(employee.Id, (int)ActionTypeEnum.Delete, oldData, null);
+                    await _auditAuditService.LogDeletion(employee.Id, oldData, null);
 
                     scope.Complete();
 
