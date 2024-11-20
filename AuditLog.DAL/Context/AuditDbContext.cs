@@ -8,7 +8,7 @@ namespace App.DAL.Context
     {
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<ActionType> ActionTypes { get; set; }
-
+        public DbSet<AuditLogWithEmployee> AuditLogWithEmployees { get; set; }
         public AuditDbContext(DbContextOptions<AuditDbContext> options) : base(options)
         {
         }
@@ -22,7 +22,8 @@ namespace App.DAL.Context
        new ActionType { Id = (int)ActionTypeEnum.Delete, Name = ActionTypeEnum.Delete.ToString() }
    );
 
-        
+            
+            modelBuilder.Entity<AuditLogWithEmployee>().ToView("AuditLogWithEmployee").HasNoKey();
         }
     }
 }

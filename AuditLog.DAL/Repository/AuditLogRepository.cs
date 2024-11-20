@@ -23,9 +23,9 @@ namespace Log.DAL.Repository
         }
 
         
-        public async Task<IEnumerable<AuditLog>> GetAllAsync()
+        public async Task<IEnumerable<AuditLogWithEmployee>> GetAllAsync()
         {
-            return await _context.AuditLogs.ToListAsync();
+            return await _context.AuditLogWithEmployees.ToListAsync();
         }
     }
 }

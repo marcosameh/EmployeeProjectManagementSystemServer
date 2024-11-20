@@ -1,4 +1,5 @@
-﻿using Log.Domain.Entities;
+﻿using App.Shared.Models;
+using Log.BL.DTOs;
 
 
 namespace Log.BL.IServices
@@ -8,7 +9,7 @@ namespace Log.BL.IServices
         Task LogAddition(int employeeId, string oldData, string newData);
         Task LogUpdate(int employeeId, string oldData, string newData);
         Task LogDeletion(int employeeId, string oldData, string newData);
-        Task<IEnumerable<AuditLog>> GetAuditLogs();
+        Task<ApiResponse<IEnumerable<AuditLogWithEmployeeDto>>> GetAuditLogs();
 
     }
 }

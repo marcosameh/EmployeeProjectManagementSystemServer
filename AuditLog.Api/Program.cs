@@ -1,4 +1,9 @@
 using App.DAL.Context;
+using Log.BL.IServices;
+using Log.BL.Mapper;
+using Log.BL.Services;
+using Log.DAL.IRepository;
+using Log.DAL.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
@@ -28,13 +33,15 @@ builder.Services.AddCors(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IAuditLogRepository,AuditLogRepository>();
+builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 
 builder.Services.AddDbContext<AuditDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 
-//builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

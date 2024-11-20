@@ -6,6 +6,6 @@ namespace Log.DAL.IRepository
     {
 
         Task<AuditLog> AddAsync(AuditLog auditLog);
-        Task<IEnumerable<AuditLog>> GetAllAsync();
+        Task<IEnumerable<AuditLogWithEmployee>> GetAllAsync();
     }
 }

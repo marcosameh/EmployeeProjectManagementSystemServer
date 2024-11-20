@@ -1,4 +1,7 @@
-﻿using Log.BL.IServices;
+﻿using App.Shared.Models;
+using AutoMapper;
+using Log.BL.DTOs;
+using Log.BL.IServices;
 using Log.DAL.IRepository;
 using Log.Domain.Entities;
 using Log.Domain.Enums;
@@ -8,10 +11,12 @@ namespace Log.BL.Services
     public class AuditLogService : IAuditLogService
     {
         private readonly IAuditLogRepository _auditLogRepository;
+        private readonly IMapper mapper;
 
-        public AuditLogService(IAuditLogRepository auditLogRepository)
+        public AuditLogService(IAuditLogRepository auditLogRepository,IMapper mapper)
         {
             _auditLogRepository = auditLogRepository;
+            this.mapper = mapper;
         }
 
         public async Task LogAddition(int employeeId, string oldData, string newData)
@@ -43,9 +48,19 @@ namespace Log.BL.Services
             await _auditLogRepository.AddAsync(auditLog);
         }
 
-        public async Task<IEnumerable<AuditLog>> GetAuditLogs()
+        public async Task<ApiResponse<IEnumerable<AuditLogWithEmployeeDto>>> GetAuditLogs()
         {
-            return await _auditLogRepository.GetAllAsync();
+            try
+            {
+                var logs = await _auditLogRepository.GetAllAsync();
+                var logsResult = mapper.Map<IEnumerable<AuditLogWithEmployeeDto>>(logs);
+
+                return new ApiResponse<IEnumerable<AuditLogWithEmployeeDto>>(true,new List<string> (),logsResult);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<IEnumerable<AuditLogWithEmployeeDto>>(true, new List<string> { ex.Message}, null);
+            }
         }
     }
 }
