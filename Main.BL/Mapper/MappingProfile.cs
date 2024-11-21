@@ -4,9 +4,9 @@ using Main.Domain.Entities;
 
 namespace Main.BL.Mapper
 {
-    public class MappingProfile : Profile
+    public class MainMappingProfile : Profile
     {
-        public MappingProfile()
+        public MainMappingProfile()
         {
             // Map for creating an employee
             CreateMap<CreateEmployeeDto, Employee>()

@@ -41,7 +41,7 @@ builder.Services.AddDbContext<AuditDbContext>(options =>
 
 
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(typeof(LogMappingProfile));
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

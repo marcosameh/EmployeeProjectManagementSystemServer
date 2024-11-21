@@ -4,9 +4,9 @@ using Log.Domain.Entities;
 
 namespace Log.BL.Mapper
 {
-    public class MappingProfile : Profile
+    public class LogMappingProfile : Profile
     {
-        public MappingProfile()
+        public LogMappingProfile()
         {
            
             CreateMap<AuditLogWithEmployee, AuditLogWithEmployeeDto>().ReverseMap();
