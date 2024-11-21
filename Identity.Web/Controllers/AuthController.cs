@@ -88,7 +88,7 @@ namespace Identity.Web.Controllers
                     }
                     else if (model.Role.Equals("Auditor", StringComparison.OrdinalIgnoreCase))
                     {
-                        return RedirectToAction("Index", "AuditorLog");
+                        return RedirectToAction("Index", "AuditLog");
                     }
 
                    

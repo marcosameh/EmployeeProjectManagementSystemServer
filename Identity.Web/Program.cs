@@ -46,15 +46,14 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     //options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+أبتثجحخدذرزسشصضطظعغفقكلمنهويىئءآإةؤا ";
     options.ClaimsIdentity.UserIdClaimType = "UserID";
 }).AddEntityFrameworkStores<IdentityContext>();
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-})
-.AddCookie(options =>
+
+builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Auth/Login";
-    options.AccessDeniedPath = "/Home/AccessDenied"; 
+    options.AccessDeniedPath = "/Home/AccessDenied";
 });
+
+
 
 
 var app = builder.Build();

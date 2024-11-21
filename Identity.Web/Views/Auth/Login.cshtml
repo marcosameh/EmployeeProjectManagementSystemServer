@@ -1,6 +1,8 @@
 ﻿@model Identity.Web.Models.LoginViewModel
 
+
 <form asp-action="Login" method="post">
+    <div asp-validation-summary="All"></div>
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />
