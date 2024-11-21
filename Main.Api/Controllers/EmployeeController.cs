@@ -52,6 +52,11 @@ namespace Log.Api.Controllers
             var response = await _employeeService.GetAllEmployeesAsync();
             return Ok(response);
         }
-
+        [HttpGet("IsEmailUnique")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<EmployeeDto>>>> IsEmailUnique(string email,int?employeeId)
+        {
+            var response = await _employeeService.IsEmailUniqueAsync(email,employeeId);
+            return Ok(response);
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace Main.BL.IServices
         Task<ApiResponse<IEnumerable<EmployeeDto>>> GetAllEmployeesAsync();
         Task<ApiResponse<int>> UpdateEmployeeAsync(EmployeeDto employeeDto);
         Task<ApiResponse<bool>> SoftDeleteEmployeeWithAuditAsync(int employeeId);
+        Task<ApiResponse<bool>> IsEmailUniqueAsync(string email,int? employeeId);
     }
 }

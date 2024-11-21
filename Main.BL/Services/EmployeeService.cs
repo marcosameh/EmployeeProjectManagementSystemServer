@@ -29,7 +29,7 @@ namespace Main.BL.Services
             {
                 try
                 {
-                    if (!await _employeeRepository.IsEmailUniqueAsync(createEmployeeDto.Email))
+                    if (!await _employeeRepository.IsEmailUniqueAsync(createEmployeeDto.Email,null))
                     {
                         return new ApiResponse<int>(false, new List<string> { "employee already exisit" }, default(int));
                     }
@@ -45,8 +45,8 @@ namespace Main.BL.Services
                     };
                     //log action
 
-                   var newData = JsonConvert.SerializeObject(addedEmployee, settings);
-                    
+                    var newData = JsonConvert.SerializeObject(addedEmployee, settings);
+
                     await _auditAuditService.LogAddition(addedEmployee.Id, null, newData);
 
 
@@ -110,15 +110,14 @@ namespace Main.BL.Services
                     {
                         return new ApiResponse<int>(false, new List<string> { "Employee not found" }, default(int));
                     }
-                    if (existingEmployee.Email != employeeDto.Email)
-                    {
-                        if (!await _employeeRepository.IsEmailUniqueAsync(employeeDto.Email))
-                        {
-                            return new ApiResponse<int>(false, new List<string> { "Email already exisit" }, default(int));
 
-                        }
+                    if (!await _employeeRepository.IsEmailUniqueAsync(employeeDto.Email,employeeDto.Id))
+                    {
+                        return new ApiResponse<int>(false, new List<string> { "Email already exisit" }, default(int));
 
                     }
+
+
                     var oldData = JsonConvert.SerializeObject(existingEmployee, new JsonSerializerSettings
                     {
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
@@ -133,7 +132,7 @@ namespace Main.BL.Services
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                     });
 
-                   
+
 
                     await _auditAuditService.LogUpdate(updatedEmployee.Id, oldData, newData);
 
@@ -174,7 +173,7 @@ namespace Main.BL.Services
                         return new ApiResponse<bool>(false, new List<string> { "Failed to delete employee" }, false);
                     }
 
-                  
+
 
                     await _auditAuditService.LogDeletion(employee.Id, oldData, null);
 
@@ -189,7 +188,19 @@ namespace Main.BL.Services
             }
         }
 
+        public async Task<ApiResponse<bool>> IsEmailUniqueAsync(string email, int? employeeId)
+        {
+            try
+            {
+                var res = await _employeeRepository.IsEmailUniqueAsync(email, employeeId);
+                return new ApiResponse<bool>(true, new List<string>(), res);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<bool>(true, new List<string>(), true);
+            }
 
 
+        }
     }
 }

@@ -45,11 +45,11 @@ namespace Main.DAL.Repository
             if (existingEmployee == null)
                 throw new ArgumentException("Employee not found");
 
-            
+
             existingEmployee.Name = newEmployeedData.Name;
             existingEmployee.Email = newEmployeedData.Email;
 
-        
+
             foreach (var project in newEmployeedData.Projects)
             {
                 var existingProject = existingEmployee.Projects
@@ -57,18 +57,18 @@ namespace Main.DAL.Repository
 
                 if (existingProject != null)
                 {
-                   
+
                     existingProject.Name = project.Name;
                     existingProject.Description = project.Description;
                 }
                 else
                 {
-                   
+
                     existingEmployee.Projects.Add(project);
                 }
             }
 
-           
+
             foreach (var project in existingEmployee.Projects.ToList())
             {
                 if (!newEmployeedData.Projects.Any(p => p.Id == project.Id))
@@ -93,10 +93,37 @@ namespace Main.DAL.Repository
             return true;
         }
 
-        public async Task<bool> IsEmailUniqueAsync(string email)
+        public async Task<bool> IsEmailUniqueAsync(string email, int? employeeId)
         {
+            
+            email = email.ToLower().Trim();
+
+            if (employeeId.HasValue && employeeId > 0)
+            {
+              
+                var existingEmployee = await _context.Employees
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(e => e.Id == employeeId.Value);
+
+                if (existingEmployee == null)
+                {
+                    throw new ArgumentException("Employee not found.", nameof(employeeId));
+                }
+
+                // If the email hasn't changed, it's valid
+                if (existingEmployee.Email.ToLower().Trim() == email)
+                {
+                    return true;
+                }
+
+               
+                return !await _context.Employees.AnyAsync(e => e.Email == email);
+            }
+
+           
             return !await _context.Employees.AnyAsync(e => e.Email == email);
         }
+
     }
 
 }
