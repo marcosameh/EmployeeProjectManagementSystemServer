@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Main.BL.DTOs.EmployeeDto>
+
+
+@{
+    ViewBag.Title = "Employees";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Employees</h2>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Projects</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="4" class="text-center">No employees found.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var employee in Model)
+                {
+                    <tr>
+                        <td>@employee.Id</td>
+                        <td>@employee.Name</td>
+                        <td>@employee.Email</td>
+                        <td>
+                            @if (employee.Projects.Any())
+                            {
+                                <ul>
+                                    @foreach (var project in employee.Projects)
+                                    {
+                                        <li>
+                                            <strong>@project.Name:</strong> @project.Description
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span>No projects assigned.</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

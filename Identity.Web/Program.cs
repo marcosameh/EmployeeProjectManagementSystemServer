@@ -1,4 +1,4 @@
-using App.DAL.Context;
+﻿using App.DAL.Context;
 using Identity.DAL.Context;
 using Log.BL.IServices;
 using Log.BL.Mapper;
@@ -11,6 +11,8 @@ using Main.BL.Services;
 using Main.DAL.Context;
 using Main.DAL.IRepository;
 using Main.DAL.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +36,27 @@ builder.Services.AddDbContext<AuditDbContext>(options =>
 
 builder.Services.AddAutoMapper(typeof(MainMappingProfile));
 builder.Services.AddAutoMapper(typeof(LogMappingProfile));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    //options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+أبتثجحخدذرزسشصضطظعغفقكلمنهويىئءآإةؤا ";
+    options.ClaimsIdentity.UserIdClaimType = "UserID";
+}).AddEntityFrameworkStores<IdentityContext>();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";
+    options.AccessDeniedPath = "/Home/AccessDenied"; 
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,6 +72,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

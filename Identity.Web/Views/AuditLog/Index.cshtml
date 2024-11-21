@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Log.BL.DTOs.AuditLogWithEmployeeDto>
+
+
+@{
+    ViewBag.Title = "Logs";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Logs</h2>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Employee Name</th>
+                <th>Action Type</th>
+                <th>Timestamp</th>
+                <th>Old Data</th>
+                <th>New Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="4" class="text-center">No Logs found.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var log in Model)
+                {
+                    <tr>
+                        <td>@log.AuditLogId</td>
+                        <td>@log.EmployeeName</td>
+                        <td>@log.ActionTypeName</td>
+                        <td>@log.Timestamp</td>
+                        <td>@log.OldData</td>
+                        <td>@log.NewData</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
