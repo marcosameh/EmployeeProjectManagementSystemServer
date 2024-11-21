@@ -20,7 +20,7 @@ namespace Log.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ApiResponse<int>>> Create([FromBody] CreateEmployeeDto employeeDto)
         {
-            var response = await _employeeService.AddEmployeeWithAuditAsync(employeeDto);
+            var response = await _employeeService.AddEmployeeAsync(employeeDto);
 
             return Ok(response);
 
@@ -53,10 +53,11 @@ namespace Log.Api.Controllers
             return Ok(response);
         }
         [HttpGet("IsEmailUnique")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<EmployeeDto>>>> IsEmailUnique(string email,int?employeeId)
+        public async Task<ActionResult<ApiResponse<IEnumerable<EmployeeDto>>>> IsEmailUnique(string email, int? employeeId)
         {
-            var response = await _employeeService.IsEmailUniqueAsync(email,employeeId);
+            var response = await _employeeService.IsEmailUniqueAsync(email, employeeId);
             return Ok(response);
         }
+       
     }
 }

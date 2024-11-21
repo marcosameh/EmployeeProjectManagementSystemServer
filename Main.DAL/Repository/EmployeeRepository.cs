@@ -95,12 +95,12 @@ namespace Main.DAL.Repository
 
         public async Task<bool> IsEmailUniqueAsync(string email, int? employeeId)
         {
-            
+
             email = email.ToLower().Trim();
 
             if (employeeId.HasValue && employeeId > 0)
             {
-              
+
                 var existingEmployee = await _context.Employees
                     .AsNoTracking()
                     .FirstOrDefaultAsync(e => e.Id == employeeId.Value);
@@ -116,14 +116,35 @@ namespace Main.DAL.Repository
                     return true;
                 }
 
-               
+
                 return !await _context.Employees.AnyAsync(e => e.Email == email);
             }
 
-           
+
             return !await _context.Employees.AnyAsync(e => e.Email == email);
         }
 
+        public async Task<bool> IsProjectAssignedAsync(int employeeId, string projectName, int? projectId)
+        {
+            projectName = projectName.ToLower().Trim();
+
+            if (projectId.HasValue && projectId > 0)
+            {
+                var existingProject = await _context.Projects
+                   .AsNoTracking()
+                   .FirstOrDefaultAsync(p => p.Id == projectId.Value && p.EmployeeId == employeeId);
+
+                if (existingProject.Name.ToLower().Trim() == projectName)
+                {
+                    return true;
+                }
+                return !await _context.Projects.AnyAsync(e => e.EmployeeId == employeeId && e.Name == projectName);
+            }
+            return !await _context.Projects.AnyAsync(e => e.EmployeeId == employeeId && e.Name == projectName);
+
+
+
+        }
     }
 
 }

@@ -23,19 +23,27 @@ namespace Main.BL.Services
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<int>> AddEmployeeWithAuditAsync(CreateEmployeeDto createEmployeeDto)
+        public async Task<ApiResponse<int>> AddEmployeeAsync(CreateEmployeeDto createEmployeeDto)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 try
                 {
-                    if (!await _employeeRepository.IsEmailUniqueAsync(createEmployeeDto.Email,null))
+                    if (!await _employeeRepository.IsEmailUniqueAsync(createEmployeeDto.Email, null))
                     {
                         return new ApiResponse<int>(false, new List<string> { "employee already exisit" }, default(int));
                     }
 
+                    // Validate that all project names are unique
+                    var projectNames = createEmployeeDto.Projects.Select(p => p.Name).ToList();
+                    if (projectNames.Count != projectNames.Distinct().Count())
+                    {
+                        return new ApiResponse<int>(false, new List<string> { "Project  must be unique" }, default(int));
+                    }
+
                     var employee = _mapper.Map<Employee>(createEmployeeDto);
 
+                    
                     // Add employee
                     var addedEmployee = await _employeeRepository.AddEmployeeAsync(employee);
 
@@ -116,7 +124,14 @@ namespace Main.BL.Services
                         return new ApiResponse<int>(false, new List<string> { "Email already exisit" }, default(int));
 
                     }
+                    foreach (var project in employeeDto.Projects)
+                    {
+                        if (!await _employeeRepository.IsProjectAssignedAsync(existingEmployee.Id,project.Name,project.Id))
+                        {
+                            return new ApiResponse<int>(false, new List<string> { $"Prject {project.Name} Already exisit" }, default(int));
 
+                        }
+                    }
 
                     var oldData = JsonConvert.SerializeObject(existingEmployee, new JsonSerializerSettings
                     {
@@ -202,5 +217,7 @@ namespace Main.BL.Services
 
 
         }
+
+       
     }
 }

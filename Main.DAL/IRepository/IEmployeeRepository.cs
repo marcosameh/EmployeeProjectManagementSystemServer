@@ -15,8 +15,9 @@ namespace Main.DAL.IRepository
         Task<Employee> AddEmployeeAsync(Employee employee);
         Task<Employee> UpdateEmployeeAsync(Employee employee);
         Task<bool> SoftDeleteEmployeeAsync(int id);
-        Task<bool> IsEmailUniqueAsync(string email,int? employeeId);
-
+        Task<bool> IsEmailUniqueAsync(string email, int? employeeId);
+        Task<bool> IsProjectAssignedAsync(int employeeId, string projectName,int? projectId);   
+        
 
     }
 
