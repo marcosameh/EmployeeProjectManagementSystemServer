@@ -60,6 +60,8 @@ namespace Main.DAL.Repository
 
                     existingProject.Name = project.Name;
                     existingProject.Description = project.Description;
+                    existingProject.StartDate=project.StartDate;
+                    existingProject.EndDate=project.EndDate;
                 }
                 else
                 {

@@ -13,7 +13,10 @@ namespace Main.BL.Mapper
                 .ForMember(dest => dest.Projects, opt => opt.MapFrom(src => src.Projects.Select(p => new Project
                 {
                     Name = p.Name,
-                    Description = p.Description
+                    Description = p.Description,
+                    StartDate = p.StartDate, 
+                    EndDate = p.EndDate,
+                    
                 })));
 
             // Map from Employee to EmployeeDto (including projects)

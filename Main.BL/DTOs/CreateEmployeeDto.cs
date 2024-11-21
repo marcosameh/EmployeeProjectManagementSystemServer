@@ -1,4 +1,5 @@
-﻿using Main.Domain.Entities;
+﻿using Main.BL.CustomValidators;
+using Main.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Main.BL.DTOs
@@ -25,6 +26,13 @@ namespace Main.BL.DTOs
 
         [StringLength(500, ErrorMessage = "Project description cannot be longer than 500 characters.")]
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "Start date is required.")]
+        public DateTime StartDate { get; set; }
+
+        [Required(ErrorMessage = "End date is required.")]
+        [DateGreaterThan(nameof(StartDate), ErrorMessage = "End date must be greater than start date.")]
+        public DateTime EndDate { get; set; }
     }
 
 }
